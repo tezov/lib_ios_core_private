@@ -1,3 +1,5 @@
+import SwiftUI
+
 private enum UNINITIALIZED { case SELF }
 
 @propertyWrapper public class Lazy<T: Any> {

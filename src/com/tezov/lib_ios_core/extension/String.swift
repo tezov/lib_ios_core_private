@@ -28,33 +28,56 @@ public extension String {
 }
 
 public extension String {
-    private func toDouble(base: Int) -> Double? {
-        if let bitPattern = UInt64(self, radix: base), (self.count / 2) == UInt64.byteWidth  {
-            return Double(bitPattern: bitPattern)
-        }
-        return nil
-    }
-    
-    private func toFloat(base: Int) -> Float? {
-        if let bitPattern = UInt32(self, radix: base), (self.count / 2) == UInt32.byteWidth {
-            return Float(bitPattern: bitPattern)
-        }
-        return nil
-    }
-    
     var hexToInt: Int? { Int(self, radix: 16) }
     func hexToInt(fallback: Int) -> Int { self.hexToInt ?? fallback}
     var binaryToInt: Int? { Int(self, radix: 2) }
     func binaryToInt(fallback: Int) -> Int { self.binaryToInt ?? fallback}
     
-    var hexToFloat: Float? { toFloat(base: 16) }
+    var hexToFloat: Float? {
+        if(self.count > UInt32.byteWidth) { return nil }
+        let value = self.count == UInt32.byteWidth ? self : {
+            let padding = String(repeating: "0", count: max(0, UInt32.byteWidth - self.count))
+            return padding + self
+        }()
+        if let bitPattern = UInt32(value, radix: 16) {
+            return Float(bitPattern: bitPattern)
+        }
+        return nil
+    }
     func hexToFloat(fallback: Float) -> Float { self.hexToFloat ?? fallback}
-    var binaryToFloat: Float? { toFloat(base: 2) }
+    var binaryToFloat: Float? {
+        let value = self.count == UInt32.byteWidth ? self : {
+            let padding = String(repeating: "0", count: max(0, UInt32.bitWidth - self.count))
+            return padding + self
+        }()
+        if let bitPattern = UInt32(value, radix: 2) {
+            return Float(bitPattern: bitPattern)
+        }
+        return nil
+    }
     func binaryToFloat(fallback: Float) -> Float { self.binaryToFloat ?? fallback}
     
-    var hexToDouble: Double? { toDouble(base: 16) }
+    var hexToDouble: Double? {
+        let value = self.count == UInt64.byteWidth ? self : {
+            let padding = String(repeating: "0", count: max(0, UInt64.byteWidth - self.count))
+            return padding + self
+        }()
+        if let bitPattern = UInt64(value, radix: 16)  {
+            return Double(bitPattern: bitPattern)
+        }
+        return nil
+    }
     func hexToDouble(fallback: Double) -> Double { self.hexToDouble ?? fallback}
-    var binaryToDouble: Double? { toDouble(base: 2) }
+    var binaryToDouble: Double? {
+        let value = self.count == UInt64.byteWidth ? self : {
+            let padding = String(repeating: "0", count: max(0, UInt32.bitWidth - self.count))
+            return padding + self
+        }()
+        if let bitPattern = UInt64(value, radix: 2) {
+            return Double(bitPattern: bitPattern)
+        }
+        return nil
+    }
     func binaryToDouble(fallback: Double) -> Double { self.binaryToDouble ?? fallback}
 }
 
