@@ -1,21 +1,19 @@
 import SwiftUI
 
-private enum UNINITIALIZED { case SELF }
-
 @propertyWrapper public class Lazy<T: Any> {
     private var lazyValue: (() -> T)?
-    private var value: Any = UNINITIALIZED.SELF
+    private var value: Any? = .none
 
     public var wrappedValue: T {
         get {
-            if value is UNINITIALIZED {
+             if case .none = value {
                 value = lazyValue!()
-                lazyValue = nil
+                 lazyValue = .none
             }
             return value as! T
         }
         set {
-            lazyValue = nil
+            lazyValue = .none
             self.value = newValue
         }
     }
@@ -26,5 +24,14 @@ private enum UNINITIALIZED { case SELF }
 
     public init(_ value: @escaping @autoclosure () -> T) {
         self.lazyValue = value
+    }
+    
+    public func exist() -> Bool {
+        if case .none = lazyValue {
+            return true
+        }
+        else {
+            return false
+        }
     }
 }
