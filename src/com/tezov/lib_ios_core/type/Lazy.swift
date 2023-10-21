@@ -2,15 +2,15 @@ import SwiftUI
 
 @propertyWrapper public class Lazy<T: Any> {
     private var lazyValue: (() -> T)?
-    private var value: Any? = .none
+    private var value: T? = .none
 
     public var wrappedValue: T {
         get {
-             if case .none = value {
+            value ?? {
                 value = lazyValue!()
-                 lazyValue = .none
-            }
-            return value as! T
+                lazyValue = .none
+                return value!
+            }()
         }
         set {
             lazyValue = .none
