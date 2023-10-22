@@ -5,17 +5,19 @@ public extension Int {
     func binary(bitWidth: Int) -> String? {
         let value = self.binary
         let paddingCount = bitWidth - value.count
-        if paddingCount >= 0 { 
+        if paddingCount >= 0 {
             return String(repeating: "0", count: Swift.max(0, paddingCount)) + value
         }
         return nil
     }
-    func binary(bitWidth: Int, fallback: String) -> String { self.binary(bitWidth: bitWidth) ?? fallback}
+
+    func binary(bitWidth: Int, fallback: String) -> String { self.binary(bitWidth: bitWidth) ?? fallback }
 
     func binary(byteWidth: Int) -> String? {
         binary(bitWidth: byteWidth * UInt8.bitWidth)
     }
-    func binary(byteWidth: Int, fallback: String) -> String { self.binary(byteWidth: byteWidth) ?? fallback}
+
+    func binary(byteWidth: Int, fallback: String) -> String { self.binary(byteWidth: byteWidth) ?? fallback }
 
     var hex: String { String(self, radix: 16, uppercase: true) }
     func hex(byteWidth: Int) -> String? {
@@ -26,7 +28,8 @@ public extension Int {
         }
         return nil
     }
-    func hex(byteWidth: Int, fallback: String) -> String { self.hex(byteWidth: byteWidth) ?? fallback}
+
+    func hex(byteWidth: Int, fallback: String) -> String { self.hex(byteWidth: byteWidth) ?? fallback }
 
     var string: String { String(self) }
 }
