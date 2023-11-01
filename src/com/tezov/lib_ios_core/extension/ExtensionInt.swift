@@ -32,6 +32,8 @@ public extension Int {
     func hex(byteWidth: Int, fallback: String) -> String { self.hex(byteWidth: byteWidth) ?? fallback }
 
     var string: String { String(self) }
+    var double: Double { Double(self) }
+    var float: Float { Float(self) }
 }
 
 public extension UInt8 {

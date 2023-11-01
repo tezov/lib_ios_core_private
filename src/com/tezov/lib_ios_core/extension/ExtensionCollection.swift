@@ -1,11 +1,45 @@
 import Foundation
 
+public let NIL_INDEX = -1
+
+public extension Int {
+    
+    var isNilIndex:Bool { self == NIL_INDEX }
+    
+    var isNotNilIndex:Bool { self != NIL_INDEX }
+    
+}
+
 public extension Collection {
+    var lastIndex: Self.Index { index(endIndex, offsetBy: -1) }
+
+    func index(of intIndex: Int) -> Self.Index {
+        index(startIndex, offsetBy: intIndex)
+    }
+
+    func intIndex(of index: Self.Index) -> Int {
+        distance(from: startIndex, to: index)
+    }
+
+    func intIndex(of predicate: (Self.Element) -> Bool) -> Int? {
+        if let index = self.firstIndex(where: predicate) {
+            return self.intIndex(of: index)
+        }
+        return nil
+    }
+
     func getOrNil(at index: Self.Index) -> Self.Element? {
         if index >= startIndex, index < endIndex {
             return self[index]
         }
         return nil
+    }
+
+    func lastOrNil() -> Self.Element? {
+        if self.isEmpty { return nil }
+        else {
+            return self[lastIndex]
+        }
     }
 
     func count(_ predicate: (Self.Element) -> Bool) -> (accepted: Int, refused: Int) {
@@ -15,7 +49,7 @@ public extension Collection {
         return (accepted, self.count - accepted)
     }
 
-    func partition(_ predicate: (Self.Element) -> Bool) -> (accepted: [Self.Element], refused: [Self.Element]) {
+    func partitioned(_ predicate: (Self.Element) -> Bool) -> (accepted: [Self.Element], refused: [Self.Element]) {
         var accepted: [Self.Element] = []
         var refused: [Self.Element] = []
         for element in self {
@@ -24,9 +58,9 @@ public extension Collection {
         return (accepted, refused)
     }
 
-    func slice(of size: Int) -> [SubSequence] { slice(of: [size]) }
+    func sliced(of size: Int) -> [SubSequence] { sliced(of: [size]) }
 
-    func slice(of sizes: [Int], sizeForRemaining: Int? = nil) -> [SubSequence] {
+    func sliced(of sizes: [Int], sizeForRemaining: Int? = nil) -> [SubSequence] {
         var result: [SubSequence] = []
         var chunkIndex = 0
         var currentIndex = self.startIndex
@@ -44,6 +78,15 @@ public extension Collection {
             currentIndex = endIndex
         }
         return result
+    }
+}
+
+public extension Collection where Self.Element: Equatable {
+    func intIndex(of element: Self.Element) -> Int? {
+        if let index = (self.firstIndex { element == $0 }) {
+            return self.intIndex(of: index)
+        }
+        return nil
     }
 }
 

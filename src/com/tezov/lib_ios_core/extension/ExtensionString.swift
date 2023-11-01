@@ -87,32 +87,10 @@ public extension String {
 }
 
 public extension String {
-    func intIndex(of stringIndex: String.Index) -> Int {
-        distance(from: startIndex, to: stringIndex)
-    }
-
-    func stringIndex(of intIndex: Int) -> String.Index {
-        index(startIndex, offsetBy: intIndex)
-    }
-
-    func intIndex(of predicate: (Character) -> Bool) -> Int? {
-        if let index = self.firstIndex(where: predicate) {
-            return self.intIndex(of: index)
-        }
-        return nil
-    }
-
-    func intIndex(of char: Character) -> Int? {
-        if let index = (self.firstIndex { char == $0 }) {
-            return self.intIndex(of: index)
-        }
-        return nil
-    }
-
     subscript(_ index: Int) -> Character {
-        get { self[self.stringIndex(of: index)] }
+        get { self[self.index(of: index)] }
         set {
-            let i = self.stringIndex(of: index)
+            let i = self.index(of: index)
             self.remove(at: i)
             self.insert(newValue, at: i)
         }
@@ -120,7 +98,7 @@ public extension String {
 
     subscript(insertAt index: Int) -> String {
         get { fatalError("there is no getter") }
-        set { self.insert(contentsOf: newValue, at: self.stringIndex(of: index)) }
+        set { self.insert(contentsOf: newValue, at: self.index(of: index)) }
     }
 
     func getOrNil(at index: Int) -> Character? {
