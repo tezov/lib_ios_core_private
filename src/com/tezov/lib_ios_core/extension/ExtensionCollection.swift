@@ -79,9 +79,16 @@ public extension Collection {
         }
         return result
     }
+    
+    func distinctBy<T: Hashable>(_ keyClosure: (Element) -> T) -> [Element] {
+        var uniqueKeys = Set<T>()
+        return filter { uniqueKeys.insert(keyClosure($0)).inserted }
+    }
+    
 }
 
 public extension Collection where Self.Element: Equatable {
+    
     func intIndex(of element: Self.Element) -> Int? {
         if let index = (self.firstIndex { element == $0 }) {
             return self.intIndex(of: index)
@@ -90,8 +97,25 @@ public extension Collection where Self.Element: Equatable {
     }
 }
 
-public extension Array where Element == String {
-    func join(_separator _: String = " ") -> String {
-        self.joined(separator: " ")
+public extension Array where Self.Element: Hashable {
+    var toSet: Set<Array.Element> { Set(self) }
+    var toSetOrdered: NSOrderedSet { NSOrderedSet(array: Array(self)) }
+    
+    func intersection(_ other: [Element]) -> [Element] {
+        let me = Set(self)
+        let other = Set(other)
+        return me.intersection(other).toArray
     }
+    
+    func subtract(_ other: [Element]) -> [Element] {
+        self.toSet.subtracting(other.toSet).toArray
+    }
+}
+
+public extension Set {
+    var toArray: Array<Set.Element> { Array(self) }
+}
+
+public extension NSOrderedSet {
+    var toArray: Array<NSOrderedSet.Element> { Array(self) }
 }

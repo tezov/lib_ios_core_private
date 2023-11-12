@@ -128,9 +128,6 @@ public extension String {
 }
 
 extension String {
-    var toSet: Set<String.Element> { Set(self) }
-
-    var toSetOrdered: NSOrderedSet { NSOrderedSet(array: Array(self)) }
 
     func split(_ separator: String = " ") -> [String] {
         self.components(separatedBy: separator)
@@ -141,4 +138,10 @@ public extension Character {
     var string: String { String(self) }
     var integer: Int? { self.string.integer }
     func integer(fallback: Int) -> Int { self.integer ?? fallback }
+}
+
+public extension Array where Self.Element == String {
+    func join(_separator _: String = " ") -> String {
+        self.joined(separator: " ")
+    }
 }
